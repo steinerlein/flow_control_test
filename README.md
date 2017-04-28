@@ -14,5 +14,7 @@ In this case everything works fine until the Bluefriend UART module pulls high i
 
 To demonstrate this, there are logic analyzer recordings in /logic_analyzer_data/ which can be opened with software from saleae: https://www.saleae.com/downloads
 
+The screencap in /images/ shows that data is being sent to the Bluefruit (green), at some point the flow control pin goes high (red), but data keeps flowing out of the MCU. The relevant point in time is marked in yellow.
+
 The test is being made with a teensy and a Bluefriend UART module with up to date firmware version 0.7.7
-The library is installed very recently via platform-io, so I expect it to be up to date. 
+The library is installed very recently via platform-io, so I expect it to be up to date.
