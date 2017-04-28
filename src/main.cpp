@@ -5,7 +5,9 @@
 
 #include "settings.h"
 
-Adafruit_BluefruitLE_UART ble(BLUEFRUIT_HWSERIAL_NAME, BLUEFRUIT_UART_MODE_PIN,BLUEFRUIT_UART_CTS_PIN,BLUEFRUIT_UART_RTS_PIN);
+
+// Adafruit_BluefruitLE_UART ble(BLUEFRUIT_HWSERIAL_NAME, BLUEFRUIT_UART_MODE_PIN,BLUEFRUIT_UART_CTS_PIN,BLUEFRUIT_UART_RTS_PIN); //flow control enabled
+Adafruit_BluefruitLE_UART ble(BLUEFRUIT_HWSERIAL_NAME, BLUEFRUIT_UART_MODE_PIN); //flow control disabled
 
 int32_t sServiceId;
 int32_t sChar1Id;
