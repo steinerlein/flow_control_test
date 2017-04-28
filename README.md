@@ -1,4 +1,4 @@
-#flow control test with HW UART
+## flow control test with HW UART
 
 This repo contains all data related to an issue where flow control is not working as expected.
 
