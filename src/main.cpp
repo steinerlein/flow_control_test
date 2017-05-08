@@ -6,8 +6,8 @@
 #include "settings.h"
 
 
-// Adafruit_BluefruitLE_UART ble(BLUEFRUIT_HWSERIAL_NAME, BLUEFRUIT_UART_MODE_PIN,BLUEFRUIT_UART_CTS_PIN,BLUEFRUIT_UART_RTS_PIN); //flow control enabled
-Adafruit_BluefruitLE_UART ble(BLUEFRUIT_HWSERIAL_NAME, BLUEFRUIT_UART_MODE_PIN); //flow control disabled
+Adafruit_BluefruitLE_UART ble(BLUEFRUIT_HWSERIAL_NAME, BLUEFRUIT_UART_MODE_PIN,BLUEFRUIT_UART_CTS_PIN,BLUEFRUIT_UART_RTS_PIN); //flow control enabled
+// Adafruit_BluefruitLE_UART ble(BLUEFRUIT_HWSERIAL_NAME, BLUEFRUIT_UART_MODE_PIN); //flow control disabled
 
 int32_t sServiceId;
 int32_t sChar1Id;
@@ -137,16 +137,47 @@ bool initBLE(bool echo = false){
         return success;
 }
 
+
+// initializes the BLE module and sets all the services and characteristics
+bool initBLE_small(bool echo = false){
+
+        boolean success = false;
+
+        // refer to bluefruitconfig.h for verbose mode
+        success = ble.begin(VERBOSE_MODE);
+
+        ble.setInterCharWriteDelay(5);
+
+        /* Disable command echo from Bluefruit */
+        ble.echo(false);
+
+
+        /* Perform a factory reset to make sure everything is in a known state */
+        if(VERBOSE_MODE) Serial.println(F("Performing a factory reset: "));
+        if (!ble.factoryReset() ) {
+                if(VERBOSE_MODE) error(F("Couldn't factory reset"));
+        }
+
+        /* Disable command echo from Bluefruit */
+        ble.echo(false);
+        return success;
+}
+
 void setup(){
         Serial.begin(115200);
-
+        pinMode(14,OUTPUT);
         pinMode(BLUEFRUIT_UART_CTS_PIN, OUTPUT);
         digitalWrite(BLUEFRUIT_UART_CTS_PIN, LOW);
 
-        bool didinitBLE = initBLE();
-        Serial.println(didinitBLE);
+        // bool didinitBLE = initBLE_small();
+        ble.begin(VERBOSE_MODE);
+        // Serial.println(didinitBLE);
 }
 
 void loop(){
-        delay(50);
+        ble.factoryReset();
+        ble.echo(false);
+        ble.sendCommandWithIntReply( F("AT+GATTADDSERVICE=UUID128=7c-33-3f-99-33-c1-49-50-90-dd-85-a1-60-ac-50-97"), &sServiceId);
+        ble.sendCommandWithIntReply( F("AT+GATTADDCHAR=UUID128=9c-32-bb-65-52-02-41-a3-80-a0-f1-07-f4-18-8f-a9, PROPERTIES=0x12, MIN_LEN=1, MAX_LEN=4, VALUE=0, DESCRIPTION=gas quality"), &sChar4Id);
+        delay(10);
 }
